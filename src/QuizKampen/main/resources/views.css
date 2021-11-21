@@ -1,0 +1,18 @@
+.background {-fx-background-image: url("quizkampenbakgrund.jpg");}
+
+
+.vbox {
+    -fx-background-repeat: stretch;
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center center;
+}
+
+.button {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+    -fx-font-weight: bold;
+    -fx-font-size: 12pt;
+    -fx-font-family: "System";
+    -fx-background-image: url("kategorifärg.jpg"); ;
+}
+
+
