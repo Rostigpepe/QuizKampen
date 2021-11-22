@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="335.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gameControllers.ResultsController">
+   <ImageView fitHeight="600.0" fitWidth="335.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
+      <Image url="@quizkampenbakgrund.jpg"/>
+   </ImageView>
+   <VBox fx:id="background" alignment="CENTER" fillWidth="false" layoutX="-20.0" layoutY="6.0" maxHeight="-Infinity"
+         maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="335.0"
+         spacing="30.0" style="-fx-background-image: url(quizkampenbakgrund.jpg)" AnchorPane.leftAnchor="0.0"
+         AnchorPane.topAnchor="0.0">
+      <padding>
+         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
+      </padding>
+      <children>
+         <ImageView fitHeight="35.0" fitWidth="200.0">
+            <image>
+               <Image url="@nya_quizkampen.jpg"/>
+            </image>
+         </ImageView>
+         <Text fx:id="player2" fill="#f8f7f7" strokeType="OUTSIDE" strokeWidth="0.0" text="PLAYER 2"
+               textAlignment="CENTER" wrappingWidth="200.0">
+            <font>
+               <Font name="Avenir Next Condensed Bold" size="30.0"/>
+            </font>
+         </Text>
+         <Text fx:id="playerOne" fill="#f8f7f7" strokeType="OUTSIDE" strokeWidth="0.0" text="PLAYER 1"
+               textAlignment="CENTER" wrappingWidth="200.0">
+            <font>
+               <Font name="Avenir Next Condensed Bold" size="30.0"/>
+            </font>
+         </Text>
+      </children>
+   </VBox>
+</AnchorPane>
