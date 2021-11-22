@@ -51,7 +51,7 @@ public class LoginController {
     public void loginKnappenOnAction(ActionEvent event) throws InterruptedException, IOException {
         if (!this.användarnamnTextField.getText().isBlank() && !this.lösenordField.getText().isBlank()) {
             if (this.användarnamnTextField.getText().equals("h") && this.lösenordField.getText().equals("h")) {
-                this.loginLabel.setText("Lyckad inloggning!");
+               // this.loginLabel.setText("Lyckad inloggning!");
                 new UserInfo();
                 Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource(ChangeScreen.CHOOSE_GAME_CONTROLLER)));
                 Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();

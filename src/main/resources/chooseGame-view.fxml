@@ -38,12 +38,12 @@
                   <ComboBox fx:id="comboBox2" prefHeight="34.0" prefWidth="161.0" promptText="FRÅGOR" style="-fx-background-color: white;" />
                </children>
             </VBox>
-            <Button fx:id="startaSpel" mnemonicParsing="false" onAction="#startaSpel" prefHeight="65.0" prefWidth="161.0" style="-fx-background-color: green;" text="Starta spel">
+            <Button fx:id="startaSpel" mnemonicParsing="false" onAction="#startaSpel" prefHeight="71.0" prefWidth="161.0" style="-fx-background-color: black;" stylesheets="@views.css" text="Starta spel" textFill="WHITE">
                <font>
                   <Font name="Avenir Next Condensed Bold" size="18.0" />
                </font>
             </Button>
-            <Button fx:id="loggaUt" mnemonicParsing="false" onAction="#loggaUtKnappenOnAction" prefHeight="65.0" prefWidth="161.0" style="-fx-background-color: red;" text="Logga ut">
+            <Button fx:id="loggaUt" mnemonicParsing="false" onAction="#loggaUtKnappenOnAction" prefHeight="71.0" prefWidth="161.0" style="-fx-background-color: black;" stylesheets="@views.css" text="Logga ut" textFill="WHITE">
                <font>
                   <Font name="Avenir Next Condensed Bold" size="18.0" />
                </font>

@@ -48,7 +48,7 @@ public class ChooseGameController implements Initializable {
 
     public void startaSpel(ActionEvent e) {
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource(ChangeScreen.GAME_CONTROLLER)));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource(ChangeScreen.CATEGORY)));
             Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
             primaryStage.setTitle("Quizkampen");
             primaryStage.setScene(new Scene(root));

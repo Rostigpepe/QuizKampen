@@ -25,7 +25,7 @@ public class CatQuesAnsw {
 
 
    private final String[] questions = {"Vad heter huvudstaden i Brasilien? ",
-           "Vem är president i USA?", "Vad är den kemiska förkortningen av vatten ?"};
+           "Vem är president i USA?", "Vad är den kemiska beteckningen för vatten ?"};
 
    private final String[] genre = {"Geografi", "Samhällskunskap", "Naturvetenskap"};
 

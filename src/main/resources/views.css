@@ -10,13 +10,16 @@
 .button {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
     -fx-font-weight: bold;
-    -fx-font-size: 12pt;
-    -fx-font-family: "System";
+    -fx-font-size: 14pt;
+    -fx-font-family: "Avenir Next Condensed";
     -fx-background-image: url("kategorifärg.jpg"); ;
 }
 
 .label {
     -fx-text-fill: white;
+    -fx-font-size: 14pt;
+    -fx-font-weight: bold;
+    -fx-font-family: "Avenir Next Condensed";
 }
 
 

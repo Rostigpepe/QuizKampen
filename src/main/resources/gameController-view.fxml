@@ -31,6 +31,15 @@
                 <font>
                     <Font name="Arial" size="13.0" />
                 </font>
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+            <StackPane.margin>
+               <Insets />
+            </StackPane.margin>
+            <padding>
+               <Insets left="20.0" right="20.0" />
+            </padding>
             </Label>
             <Label fx:id="genreField" alignment="CENTER" prefHeight="26.0" prefWidth="147.0" style="-fx-background-radius: 0 0 10 10; -fx-border-radius: 0 0 10 10; -fx-background-color: #467ae1;" textFill="WHITE">
                 <font>
