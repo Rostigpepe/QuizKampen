@@ -26,12 +26,20 @@ public class ChooseGameController implements Initializable {
     private ComboBox comboBox2;
     Utilities utilities = new Utilities();
 
+    public static String totalaFragorString;
+
+    static final String getTotalaFragorString(){
+        return totalaFragorString;
+    }
+
+
     public ChooseGameController() {
     }
 
     public void myBox(ActionEvent event) throws IOException {
         if (this.comboBox.getItems() != null) {
-            System.out.println(this.comboBox.getSelectionModel().selectedItemProperty().getValue());
+            totalaFragorString = (String) this.comboBox.getSelectionModel().selectedItemProperty().getValue();
+            System.out.println(totalaFragorString);
         }
 
     }
@@ -48,6 +56,7 @@ public class ChooseGameController implements Initializable {
 
     public void startaSpel(ActionEvent e) {
         try {
+            totalaFragorString = (String) this.comboBox.getSelectionModel().selectedItemProperty().getValue();
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource(ChangeScreen.CATEGORY)));
             Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
             primaryStage.setTitle("Quizkampen");

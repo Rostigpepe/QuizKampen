@@ -56,7 +56,7 @@ public class GameController implements Initializable {
     private int index;
     private String answer;
     private int correctGuesses = 0;
-    private final int totalQuestions = questions.length;
+    private final int totalQuestions= Integer.parseInt(ChooseGameController.getTotalaFragorString());
     private int seconds;
 
     public int getCorrectGuesses() {
@@ -215,7 +215,7 @@ public class GameController implements Initializable {
 
     @FXML
     public void results(ActionEvent e) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource(ChangeScreen.RESULTS)));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource(ChangeScreen.WAITING)));
         Stage primaryStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         primaryStage.setTitle("Quizkampen");
         primaryStage.setScene(new Scene(root));

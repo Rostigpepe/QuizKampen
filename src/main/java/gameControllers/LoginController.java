@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import gameControllers.UserInfo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +19,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class LoginController {
     @FXML
@@ -36,7 +34,14 @@ public class LoginController {
     @FXML
     private PasswordField lösenordField;
 
+
+
     public LoginController() {
+    }
+
+    public String getAnvändarnamnTextField() {
+        String username = användarnamnTextField.getText();
+        return username;
     }
 
     public void initialisering(URL url, ResourceBundle resourceBundle) {

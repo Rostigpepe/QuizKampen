@@ -12,6 +12,7 @@ public class ResultsController  implements Initializable {
 
     public VBox background;
     GameController g = new GameController();
+    ChangeScreen screen = new ChangeScreen();
 
     int correctGuesses = g.getCorrectGuesses();
     int totalQuestions = g.getTotalQuestions();
