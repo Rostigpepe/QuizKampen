@@ -51,6 +51,7 @@ public class Client {
 
     //Header of 0 equals random bs
     //Header of 1 equals question
+    //Header of 2 equals other client isn't done yet
     //This whole method will be a blocking one, therefore we'll run it in a difference thread
     public void listenForPacket(){
         //new Thread(() -> {
@@ -68,6 +69,7 @@ public class Client {
                     switch (header){
                         case 0 -> System.out.println(receivedPacket);
                         case 1 -> questionHandling(receivedPacket);
+                        case 2 -> waitForOtherClient();
                         default -> System.out.println("Problem with the header");
                     }
                 } catch (IOException e){
@@ -80,6 +82,9 @@ public class Client {
 
 
     public void questionHandling(String questionPacket){
+        //Index 0 == tietl
+        //Index 1-4 == Svarsalternativ
+        //Index 5 == korrekta svaret
         String[] splitQuestion = QuestionManaging.splitQuestion(questionPacket);
 
         for (int i = 0; i < splitQuestion.length; i++) {
@@ -111,10 +116,16 @@ public class Client {
     }
 
 
+    public void waitForOtherClient() {
+        System.out.println("Awaiting other client to finish their question...");
+        listenForPacket();
+    }
+
+
     public static void runLoop() throws IOException {
         Scanner uInput = new Scanner(System.in);
 
-        System.out.print("Ples gib name: ");
+        System.out.print("Please enter your name: ");
         String name = uInput.nextLine();
 
         Socket socket = new Socket("localhost", 7777);

@@ -37,26 +37,10 @@ public class Server {
     }
 
 
-    public void closeServerSocket(){
-        try {
-            if(serverSocket != null){
-                serverSocket.close();
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
     public static void main(String[] args) throws IOException {
-        for (int i = 0; i < 12; i++) {
-            int pain = i * 6;
-            new Questions(Integer.toString(pain),
-                    Integer.toString(pain - 1),
-                    Integer.toString(pain- 2),
-                    Integer.toString(pain - 3),
-                    Integer.toString(pain - 4),
-                    4);
-        }
+        Questions.readQuestionsFromFile("resources/Geografi.txt");
+        Questions.readQuestionsFromFile("resources/Historia.txt");
+        Questions.readQuestionsFromFile("resources/Kultur.txt");
 
         ServerSocket serverSocket = new ServerSocket(7777);
         Server server = new Server(serverSocket);

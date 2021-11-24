@@ -1,5 +1,8 @@
 package server.quizkampen;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Questions {
@@ -61,7 +64,25 @@ public class Questions {
         return questionString.toString();
     }
 
-    public static void questionCreatorFromReadFile(String question){
+
+    public static void readQuestionsFromFile(String filePath){
+
+        try (BufferedReader fileIn = new BufferedReader(new FileReader(filePath))){
+            String line = fileIn.readLine();
+
+            while(line != null){
+                questionCreatorFromReadFile(line, filePath);
+                line = fileIn.readLine();
+            }
+
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void questionCreatorFromReadFile(String question, String filePath){
         String[] splitQuestionInfo = question.split(",");
 
         for (int i = 0; i < splitQuestionInfo.length; i++) {
@@ -69,11 +90,18 @@ public class Questions {
             splitQuestionInfo[i] = splitQuestionInfo[i].replace(",", "");
         }
 
-        new Questions(splitQuestionInfo[0],
+        Questions tempQuestion = new Questions(splitQuestionInfo[0],
                 splitQuestionInfo[1],
                 splitQuestionInfo[2],
                 splitQuestionInfo[3],
                 splitQuestionInfo[4],
                 Integer.parseInt(splitQuestionInfo[5]));
+
+        switch (filePath){
+            case "resources/Geografi.txt" -> geographyQuestions.add(tempQuestion);
+            case "resources/Historia.txt" -> historyQuestions.add(tempQuestion);
+            case "resources/Kultur.txt" -> cultureQuestions.add(tempQuestion);
+            default -> System.out.println("Pain and suffering");
+        }
     }
 }

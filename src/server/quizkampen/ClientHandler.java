@@ -17,7 +17,7 @@ public class ClientHandler implements Runnable{
     private BufferedWriter bufferedWriter;
     private String clientUsername;
     private int score = 0;
-    private boolean waiting;
+    private boolean waiting = false;
 
     public ClientHandler(Socket socket){
         try {
@@ -45,10 +45,10 @@ public class ClientHandler implements Runnable{
                 //This is a blocking operation, yet another reason we want to run everything in separate threads
                 receivedInput = bufferedReader.readLine();
                 if(receivedInput.equals("correct")){
-                    sendRandomShit("You are correct");
+                    sendGeneralPacket("You are correct");
                 }
                 else{
-                    sendRandomShit("You are incorrect");
+                    sendGeneralPacket("You are incorrect");
                 }
                 updateScore(receivedInput);
             } catch (IOException e){
@@ -59,7 +59,8 @@ public class ClientHandler implements Runnable{
     }
 
 
-    public void sendShit(String packet){
+    //General method used to send a packet between the server and the client
+    public void sendPacket(String packet){
         try {
             this.bufferedWriter.write(packet);
             //We are listening for a new line, so we're sending one
@@ -71,40 +72,80 @@ public class ClientHandler implements Runnable{
         }
     }
 
-
-    public void sendRandomShit(String stringToSend){
+    //Specific method to send packets with a little of whatever we want to send
+    //Header of 0 equals general text
+    public void sendGeneralPacket(String stringToSend){
         String packet = "0" + stringToSend;
-        sendShit(packet);
+        sendPacket(packet);
     }
 
-
+    //Specific method to send packets with a question
     //Header of 1 equals question
     public void sendQuestion(int index){
         String packet = "1" + Questions.getQuestionString(index);
-        sendShit(packet);
+        sendPacket(packet);
     }
 
+    //Specific method to tell a client to wait
+    //Header 2 equals waiting
+    public void sendWaitRequest(){
+        String packet = "2";
+        sendPacket(packet);
+    }
 
+    //What we use to update the score of every client and to loop the program back around
     public void updateScore(String answer){
+        this.waiting = true;
         //Add logic to check if the currently asked question
         if(answer.equals("correct")){
             this.score += 1;
-            sendRandomShit("Your score has increased");
-            ServerActions.sendQuestion();
+            sendGeneralPacket("Your score has increased");
         }
         else{
-            sendRandomShit("Your score has not been changed");
-            ServerActions.sendQuestion();
+            sendGeneralPacket("Your score has not been changed");
         }
 
+        if(ServerActions.getWaitingFromOpponent(this).equals("waiting")){
+            //If the other person IS waiting, that means both of us are now done, therefore the game should continue
+            ServerActions.sendQuestionToGame(this);
+        }
+        else if(ServerActions.getWaitingFromOpponent(this).equals("not waiting")){
+            //if the other person is NOT waiting, that means that they're still doing their round, therefore we will wait
+            sendWaitRequest();
+        }
+        else{
+            //We need to add something incase there isn't another person in the game yet, in which case we will wait
+            sendWaitRequest();
+        }
     }
 
-
+    //Removing a ClientHandler when someone disconnects
     public void removeClientHandler(){
         clientHandlers.remove(this);
         System.out.println("Successfully removed");
     }
 
+
+    public void setWaitingFalse(){
+        this.waiting = false;
+    }
+
+
+    public static int getClientHandlers(){
+        return clientHandlers.size();
+    }
+
+    public String getUsername(){
+        return this.clientUsername;
+    }
+
+    public boolean getWaiting(){
+        return this.waiting;
+    }
+
+    public int getScore(){
+        return this.score;
+    }
 
     //We only need to close the outer wrappers of the streams, the inner parts are auto closed
     public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter){
@@ -122,13 +163,5 @@ public class ClientHandler implements Runnable{
         } catch (IOException e){
             e.printStackTrace();
         }
-    }
-
-    public static int getClientHandlers(){
-        return clientHandlers.size();
-    }
-
-    public String getUsername(){
-        return this.clientUsername;
     }
 }
