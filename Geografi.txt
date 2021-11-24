@@ -1,0 +1,4 @@
+I vilket landskap ligger Örebro?,Närke,Västmanland,Uppland,Södermanland,1
+Vilket land har huvudstaden Wellington?,Nya Zealand,Algeriet,Ulan bator,Sydafrika,1
+Vad hette Tokyo förr?,Edo,Edoyo,Kyoto,Tyko,1
+Hur många världsdelar finns det?,7,17,4,5,1
