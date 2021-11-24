@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class ClientHandler implements Runnable{
 
     //Arraylist to keep track of all current connected clients
-    public static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
+    protected static final ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     //A socket represents the connection between a server and client
     //The socket also has an input and output stream
     private Socket socket;
@@ -15,8 +15,9 @@ public class ClientHandler implements Runnable{
     private BufferedReader bufferedReader;
     //Send output to clients
     private BufferedWriter bufferedWriter;
-    private String clientID;
     private String clientUsername;
+    private int score = 0;
+    private boolean waiting;
 
     public ClientHandler(Socket socket){
         try {
@@ -24,8 +25,6 @@ public class ClientHandler implements Runnable{
             //Character streams always ends with writer/reader, byte streams always end with stream
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            //Makes it so that each client gets assigned the number in which order they connect
-            this.clientID = Integer.toString(clientHandlers.size() + 1);
             this.clientUsername = bufferedReader.readLine();
 
             //Adding this instance of clientHandler to the arraylist we'll use for overall communication
@@ -88,13 +87,24 @@ public class ClientHandler implements Runnable{
 
     public void updateScore(String answer){
         //Add logic to check if the currently asked question
+        if(answer.equals("correct")){
+            this.score += 1;
+            sendRandomShit("Your score has increased");
+            ServerActions.sendQuestion();
+        }
+        else{
+            sendRandomShit("Your score has not been changed");
+            ServerActions.sendQuestion();
+        }
 
     }
+
 
     public void removeClientHandler(){
         clientHandlers.remove(this);
         System.out.println("Successfully removed");
     }
+
 
     //We only need to close the outer wrappers of the streams, the inner parts are auto closed
     public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter){

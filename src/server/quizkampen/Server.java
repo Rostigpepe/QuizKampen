@@ -55,7 +55,7 @@ public class Server {
                     Integer.toString(pain- 2),
                     Integer.toString(pain - 3),
                     Integer.toString(pain - 4),
-                    pain - 4);
+                    4);
         }
 
         ServerSocket serverSocket = new ServerSocket(7777);

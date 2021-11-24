@@ -53,7 +53,7 @@ public class Client {
     //Header of 1 equals question
     //This whole method will be a blocking one, therefore we'll run it in a difference thread
     public void listenForPacket(){
-        new Thread(() -> {
+        //new Thread(() -> {
             String receivedPacket;
             int header;
 
@@ -75,7 +75,7 @@ public class Client {
                 }
             }
 
-        }).start();
+       //}).start();
     }
 
 
@@ -111,7 +111,7 @@ public class Client {
     }
 
 
-    public static void main(String[] args) throws IOException {
+    public static void runLoop() throws IOException {
         Scanner uInput = new Scanner(System.in);
 
         System.out.print("Ples gib name: ");
@@ -119,7 +119,12 @@ public class Client {
 
         Socket socket = new Socket("localhost", 7777);
         Client client = new Client(socket, name);
-        client.listenForPacket();
         client.sendPacket(client.username);
+        client.listenForPacket();
+    }
+
+
+    public static void main(String[] args) throws IOException {
+        runLoop();
     }
 }
