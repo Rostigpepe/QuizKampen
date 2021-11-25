@@ -16,6 +16,8 @@ public class ClientHandler implements Runnable{
     //Send output to clients
     private BufferedWriter bufferedWriter;
     private String clientUsername;
+
+    private int currentGamesIndex;
     private int score = 0;
     private boolean waiting = false;
 
@@ -93,6 +95,11 @@ public class ClientHandler implements Runnable{
         sendPacket(packet);
     }
 
+    public void sendScore(String scoreString){
+        String packet = "3" + scoreString;
+        sendPacket(packet);
+    }
+
     //What we use to update the score of every client and to loop the program back around
     public void updateScore(String answer){
         this.waiting = true;
@@ -130,10 +137,14 @@ public class ClientHandler implements Runnable{
         this.waiting = false;
     }
 
+    public void setCurrentGamesIndex(int index) {this.currentGamesIndex = index; }
+
 
     public static int getClientHandlers(){
         return clientHandlers.size();
     }
+
+    public int getClientHandlerGameIndex() { return this.currentGamesIndex; }
 
     public String getUsername(){
         return this.clientUsername;

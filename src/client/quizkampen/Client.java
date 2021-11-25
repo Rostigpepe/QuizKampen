@@ -70,6 +70,7 @@ public class Client {
                         case 0 -> System.out.println(receivedPacket);
                         case 1 -> questionHandling(receivedPacket);
                         case 2 -> waitForOtherClient();
+                        //case 3 -> displayScore(receivedPacket);
                         default -> System.out.println("Problem with the header");
                     }
                 } catch (IOException e){
@@ -82,7 +83,7 @@ public class Client {
 
 
     public void questionHandling(String questionPacket){
-        //Index 0 == tietl
+        //Index 0 == Titel
         //Index 1-4 == Svarsalternativ
         //Index 5 == korrekta svaret
         String[] splitQuestion = QuestionManaging.splitQuestion(questionPacket);
@@ -90,12 +91,37 @@ public class Client {
         for (int i = 0; i < splitQuestion.length; i++) {
             switch (i){
                 case 0 -> System.out.println(splitQuestion[i]);
-                case 1,2,3,4 -> System.out.println("Option " + i + ": " + splitQuestion[i]);
+                case 1,2,3,4 -> System.out.println("Option " + i + ": " + splitQuestion[i]);//Knapp I = splitquestion[i]
                 case 5 -> System.out.print("Please enter your answer: ");
                 default -> System.out.println("Pain i dont know whats happening");
             }
         }
         sendAnswer(splitQuestion[5]);
+    }
+
+
+    public void waitForOtherClient() {
+        System.out.println("Awaiting other client to finish their question...");
+        listenForPacket();
+    }
+
+
+    /*public void displayScore(String scoreString){
+        String[] scoreBits = scoreString.split(",");
+        System.out.println();
+    }*/
+
+
+    public static void runLoop() throws IOException {
+        Scanner uInput = new Scanner(System.in);
+
+        System.out.print("Please enter your name: ");
+        String name = uInput.nextLine();
+
+        Socket socket = new Socket("localhost", 7777);
+        Client client = new Client(socket, name);
+        client.sendPacket(client.username);
+        client.listenForPacket();
     }
 
 
@@ -113,25 +139,6 @@ public class Client {
         } catch (IOException e){
             e.printStackTrace();
         }
-    }
-
-
-    public void waitForOtherClient() {
-        System.out.println("Awaiting other client to finish their question...");
-        listenForPacket();
-    }
-
-
-    public static void runLoop() throws IOException {
-        Scanner uInput = new Scanner(System.in);
-
-        System.out.print("Please enter your name: ");
-        String name = uInput.nextLine();
-
-        Socket socket = new Socket("localhost", 7777);
-        Client client = new Client(socket, name);
-        client.sendPacket(client.username);
-        client.listenForPacket();
     }
 
 
