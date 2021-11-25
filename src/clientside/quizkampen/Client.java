@@ -28,7 +28,7 @@ public class Client implements ActionListener{
     //Index is which question we're currently on
     String correctAnswer;
     String answer;
-    int index;
+    //int index;
     int correctGuesses = 0;
     int roundCounter = 0;
 
@@ -185,6 +185,18 @@ public class Client implements ActionListener{
         panel.add(timeLabel);
     }
 
+
+    public static void displayTextWindow(String windowText){
+        JFrame ioWindowFrame = new JFrame();
+        JOptionPane.showMessageDialog(ioWindowFrame, windowText);
+    }
+
+    public static String takeInputWindow(String windowText){
+        JFrame ioWindowFrame = new JFrame();
+        return JOptionPane.showInputDialog(ioWindowFrame, windowText);
+    }
+
+
     //The clientHandler will await an assigned ID, so we'll send that right away
     public void sendAnswer(String correctAnswer){
         String packet = answer;
@@ -226,7 +238,7 @@ public class Client implements ActionListener{
                 receivedPacket = receivedPacket.substring(1);
 
                 switch (header){
-                    case 0 -> System.out.println(receivedPacket);
+                    case 0 -> displayTextWindow(receivedPacket);
                     case 1 -> questionHandling(receivedPacket);
                     case 2 -> waitForOtherClient();
                     default -> System.out.println("Problem with the header");
@@ -284,19 +296,20 @@ public class Client implements ActionListener{
         if (e.getSource() == buttonD) {
             answer = "4";
         }
-        System.out.println(answer);
         displayAnswer();
     }
 
 
     public void displayAnswer() {
         //Loops through the button list, gets button A through D
-        for (int i = 0; i < 4; i++) {
+        int i = 1;
+        for (JButton button : buttonList){
             if(!correctAnswer.equals(Integer.toString(i))){
-                buttonList.get(i).setBackground(new Color(255, 0, 0));
+                button.setBackground(new Color(255, 0, 0));
             } else {
-                buttonList.get(i).setBackground(new Color(0, 244, 0));
+                button.setBackground(new Color(0, 244, 0));
             }
+            i++;
         }
 
         Timer time = new Timer(2000, (ActionEvent e) -> {
@@ -306,10 +319,7 @@ public class Client implements ActionListener{
 
             seconds = 20;
             timeLeft.setText(String.valueOf(seconds));
-            for (JButton button : buttonList){
-                button.setEnabled(true);
-            }
-            index++;
+            //index++;
 
             sendAnswer(correctAnswer);
         });
@@ -362,10 +372,7 @@ public class Client implements ActionListener{
 
 
     public static void runLoop() throws IOException {
-        Scanner uInput = new Scanner(System.in);
-
-        System.out.print("Please enter your name: ");
-        String name = uInput.nextLine();
+        String name = takeInputWindow("Please enter your name");
 
         Socket socket = new Socket("localhost", 7777);
         Client client = new Client(socket, name);

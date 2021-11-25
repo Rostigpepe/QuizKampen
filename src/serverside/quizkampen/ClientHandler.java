@@ -20,6 +20,10 @@ public class ClientHandler implements Runnable{
     private int score = 0;
     private boolean waiting = false;
 
+    private int index;
+    private int totalQuestions = 2;
+    private int totalRounds = 2;
+
     public ClientHandler(Socket socket){
         try {
             this.socket = socket;
@@ -97,6 +101,7 @@ public class ClientHandler implements Runnable{
     //What we use to update the score of every client and to loop the program back around
     public void updateScore(String answer){
         this.waiting = true;
+        index++;
         //Add logic to check if the currently asked question
         if(answer.equals("correct")){
             this.score += 1;
@@ -105,6 +110,14 @@ public class ClientHandler implements Runnable{
         else{
             sendGeneralPacket("Your score has not been changed");
         }
+
+        if (index == totalQuestions * totalRounds) {
+            System.out.println(index);
+            System.out.println("Lmao cringe");
+            return;
+            //results();
+        }
+
 
         if(ServerActions.getWaitingFromOpponent(this).equals("waiting")){
             //If the other person IS waiting, that means both of us are now done, therefore the game should continue
