@@ -42,22 +42,40 @@ public class ClientHandler implements Runnable{
         String receivedInput;
 
         while(socket.isConnected()){
+
+
             try {
                 //This is a blocking operation, yet another reason we want to run everything in separate threads
                 receivedInput = bufferedReader.readLine();
-                if(receivedInput.equals("correct")){
-                    sendGeneralPacket("You are correct");
+                boolean startGame = startGame(receivedInput);
+                if(startGame) {
+                    if(receivedInput.equals("correct")){
+                        sendGeneralPacket("You are correct");
+                    }
+                    else{
+                        sendGeneralPacket("You are incorrect");
+                    }
+
+                    updateScore(receivedInput);
                 }
-                else{
-                    sendGeneralPacket("You are incorrect");
-                }
-                updateScore(receivedInput);
             } catch (IOException e){
                 closeAll(socket, bufferedReader, bufferedWriter);
                 break;
             }
         }
     }
+
+    private boolean startGame(String receivedInput) {
+        // TODO Auto-generated method stub
+        boolean startGame = receivedInput.contentEquals("game applications");
+        if(startGame) {
+            ServerActions.startGame();
+            return startGame;
+        }
+
+        return false;
+    }
+
 
 
     //General method used to send a packet between the server and the client
