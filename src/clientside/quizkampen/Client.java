@@ -5,7 +5,6 @@ import serverside.quizkampen.GameSettings;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -370,18 +369,13 @@ public class Client implements ActionListener{
         listenForPacket();
     }
 
-
-    public static void runLoop() throws IOException {
+    public static void main(String[] args) throws IOException {
         String name = takeInputWindow("Please enter your name");
 
-        Socket socket = new Socket("localhost", 7777);
+        String serverAddress = (args.length == 0) ? "localhost" : args[1];
+        Socket socket = new Socket(serverAddress, 7777);
         Client client = new Client(socket, name);
         client.sendPacket(client.username);
         client.listenForPacket();
-    }
-
-
-    public static void main(String[] args) throws IOException {
-        runLoop();
     }
 }

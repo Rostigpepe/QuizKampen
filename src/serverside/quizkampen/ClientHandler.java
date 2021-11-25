@@ -1,6 +1,7 @@
 package serverside.quizkampen;
 
 
+import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -111,9 +112,11 @@ public class ClientHandler implements Runnable{
             sendGeneralPacket("Your score has not been changed");
         }
 
+        if (index == totalQuestions)
+        {
+            JOptionPane.showMessageDialog(null,"Ronden är slut. Din score är: " + score);
+        }
         if (index == totalQuestions * totalRounds) {
-            System.out.println(index);
-            System.out.println("Lmao cringe");
             return;
             //results();
         }
