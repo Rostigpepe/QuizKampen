@@ -38,9 +38,9 @@ public class Server {
 
 
     public static void main(String[] args) throws IOException {
-        Questions.readQuestionsFromFile("Geografi");
-        Questions.readQuestionsFromFile("Historia");
-        Questions.readQuestionsFromFile("Kultur");
+        Questions.readQuestionsFromFile("resources/Geografi");
+        Questions.readQuestionsFromFile("resources/Historia");
+        Questions.readQuestionsFromFile("resources/Kultur");
 
         ServerSocket serverSocket = new ServerSocket(7777);
         Server server = new Server(serverSocket);

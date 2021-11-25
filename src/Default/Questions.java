@@ -100,9 +100,9 @@ public class Questions {
                 Integer.parseInt(splitQuestionInfo[5]));
 
         switch (filePath){
-            case "Geografi" -> geographyQuestions.add(tempQuestion);
-            case "Historia" -> historyQuestions.add(tempQuestion);
-            case "Kultur" -> cultureQuestions.add(tempQuestion);
+            case "resources/Geografi" -> geographyQuestions.add(tempQuestion);
+            case "resources/Historia" -> historyQuestions.add(tempQuestion);
+            case "resources/Kultur" -> cultureQuestions.add(tempQuestion);
             default -> System.out.println("Pain and suffering");
         }
     }
