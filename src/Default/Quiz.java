@@ -158,12 +158,12 @@ public class Quiz implements ActionListener {
 
         scoreofRound.setBounds(25, 225, 100, 80);
         scoreofRound.setForeground(new Color(0, 244, 0));
-        scoreofRound.setFont(new Font("Avenir Next", Font.BOLD, 40));
+        scoreofRound.setFont(new Font("Avenir Next", Font.BOLD, 30));
         scoreofRound.setHorizontalAlignment(JTextField.CENTER);
 
         congratulations.setBounds(25, 55, 100, 60);
         congratulations.setForeground(new Color(25, 255, 0));
-        congratulations.setFont(new Font("Avenir next", Font.BOLD, 45));
+        congratulations.setFont(new Font("Avenir next", Font.BOLD, 15));
         congratulations.setHorizontalAlignment(JTextField.CENTER);
 
          frame.add(panel);
@@ -309,13 +309,7 @@ public class Quiz implements ActionListener {
         timeLeft.setVisible(false);
         timeLabel.setVisible(false);
 
-        scoreofRound.setText(correctGuesses + " rätt av " + totalQuestions*totalRounds + " möjliga");
-        if((double)correctGuesses/(double)totalQuestions>0.5) {
-            congratulations.setText("BRA JOBBAT!!");
-        }
-        else {
-            congratulations.setText("BRA FÖRSÖK!");
-        }
+        scoreofRound.setText("Totala poäng: "+ correctGuesses);
         panel.add(congratulations);
         panel.add(scoreofRound);
 

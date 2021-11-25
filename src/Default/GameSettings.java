@@ -34,11 +34,9 @@ public class GameSettings extends JFrame implements ActionListener {
         this.add(startGameButton);
         startGameButton.addActionListener(this);
 
-
-
-
         this.pack();
         this.setVisible(true);
+        this.setLocationRelativeTo(null);
 
     }
 
