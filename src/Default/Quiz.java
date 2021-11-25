@@ -9,31 +9,38 @@ import java.io.IOException;
 public class Quiz implements ActionListener {
 
     String[] questions = {
-            "Vad heter huvudstaden i Brasilien? ", "Vem är president i USA?"
+            "Vad heter huvudstaden i Brasilien? ", "Vem är president i USA?","Vad heter vår fantastiska lärare?",
+            "Vilket är det största däggdjuret?"
 
 
     };
 
-    String [] genre = {"Geografi", "Samhällskunskap"};
+    String [] genre = {"Geografi", "Samhällskunskap", "NO","Matte"};
 
 
 
     String[][] answerOptions = {
             {"Stockholm", "Buenos Aires", "Sao Paul", "Brasilia"},
-            {"Donald Trump", "Kamala Harris", "Joe Biden", "John F.Kennedy"}
+            {"Donald Trump", "Kamala Harris", "Joe Biden", "John F.Kennedy"},
+            {"Sigrun", "Sigrud", "Sigrub", "Sigrul"},
+            {"Häst", "Ko","Älg","Blåval"}
 
     };
     String[] correctAnswers = {
             "4",
             "3",
+            "1",
+            "4"
 
     };
 
     String answer;
     int index;
     int correctGuesses = 0;
-    int totalQuestions = questions.length;
+
     int seconds = 10;
+    private final int totalQuestions = Integer.parseInt(GameSettings.getTotalQuestionsString());
+    private final int totalRounds = Integer.parseInt(GameSettings.getTotalRoundsString());
 
 
     JFrame frame = new JFrame();
@@ -173,11 +180,22 @@ public class Quiz implements ActionListener {
         nextQuestion();
     }
 
+    int roundCounter = 0;
+
 
     public void nextQuestion() {
-        if (index >= totalQuestions) {
+        if (index >= totalQuestions*totalRounds) {
             results();
+
         } else {
+
+
+            if (index == totalQuestions || totalQuestions == roundCounter)
+            {
+                JOptionPane.showMessageDialog(null, "Ronden  är slut, din poäng är: " + correctGuesses);
+                roundCounter = roundCounter - totalQuestions;
+            }
+            roundCounter = roundCounter + 1;
 
             questionField.setText(questions[index]);
             genreField.setText(genre[index]);
@@ -291,7 +309,7 @@ public class Quiz implements ActionListener {
         timeLeft.setVisible(false);
         timeLabel.setVisible(false);
 
-        scoreofRound.setText(correctGuesses + " rätt av " + totalQuestions + " möjliga");
+        scoreofRound.setText(correctGuesses + " rätt av " + totalQuestions*totalRounds + " möjliga");
         if((double)correctGuesses/(double)totalQuestions>0.5) {
             congratulations.setText("BRA JOBBAT!!");
         }
