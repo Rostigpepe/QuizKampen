@@ -1,18 +1,9 @@
 package Default;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
-
-/**
- * Created by Niklas Sahlberg
- * Date: 2021-11-24
- * Time: 21:23
- * Project: QuizKampenSwing
- * Copyright: MIT
- */
 
 public class QuestionsAndRounds {
     Properties p = new Properties();

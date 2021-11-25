@@ -1,4 +1,4 @@
-package Default;
+package serverside.quizkampen;
 
 
 import java.io.*;
