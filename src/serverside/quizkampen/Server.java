@@ -1,4 +1,4 @@
-package Default;
+package serverside.quizkampen;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -10,6 +10,9 @@ public class Server {
 
     public Server(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
+        Questions.readQuestionsFromFile("resources/Geografi");
+        Questions.readQuestionsFromFile("resources/Historia");
+        Questions.readQuestionsFromFile("resources/Kultur");
     }
 
     public void startServer() {
@@ -38,10 +41,6 @@ public class Server {
 
 
     public static void main(String[] args) throws IOException {
-        Questions.readQuestionsFromFile("resources/Geografi");
-        Questions.readQuestionsFromFile("resources/Historia");
-        Questions.readQuestionsFromFile("resources/Kultur");
-
         ServerSocket serverSocket = new ServerSocket(7777);
         Server server = new Server(serverSocket);
         server.startServer();

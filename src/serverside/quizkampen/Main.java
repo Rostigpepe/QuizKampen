@@ -1,6 +1,7 @@
-package Default;
+package serverside.quizkampen;
 
-import java.io.FileNotFoundException;
+import Default.QuestionsAndRounds;
+
 import java.io.IOException;
 
 public class Main {

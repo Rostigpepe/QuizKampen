@@ -1,4 +1,6 @@
-package Default;
+package clientside.quizkampen;
+
+import serverside.quizkampen.GameSettings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +49,6 @@ public class Quiz implements ActionListener {
     JPanel panel = new ImageBackground("quizkampenbakgrund.jpg");
     JLabel genreField = new JLabel();
     ImageIcon icon = new ImageIcon("nya_quizkampen.png");
-    //ImageIcon iconGenre = new ImageIcon("quizkampenbakgrund.jpg");
 
     JLabel imageHolder = new JLabel(icon,JLabel.CENTER);
     JTextField questionField = new JTextField();
@@ -57,13 +58,12 @@ public class Quiz implements ActionListener {
     JButton buttonD = new JButton();
     JLabel timeLabel = new JLabel();
     JLabel timeLeft = new JLabel();
-    JLabel scoreofRound = new JLabel();
+    JLabel scoreOfRound = new JLabel();
     JLabel congratulations = new JLabel();
 
 
 
     Timer timer = new Timer(1000, e -> {
-
         seconds--;
         timeLeft.setText(String.valueOf(seconds));
         if (seconds <= 0) {
@@ -156,10 +156,10 @@ public class Quiz implements ActionListener {
         timeLeft.setHorizontalAlignment(JTextField.CENTER);
         timeLeft.setText(String.valueOf(seconds));
 
-        scoreofRound.setBounds(25, 225, 100, 80);
-        scoreofRound.setForeground(new Color(0, 244, 0));
-        scoreofRound.setFont(new Font("Avenir Next", Font.BOLD, 30));
-        scoreofRound.setHorizontalAlignment(JTextField.CENTER);
+        scoreOfRound.setBounds(25, 225, 100, 80);
+        scoreOfRound.setForeground(new Color(0, 244, 0));
+        scoreOfRound.setFont(new Font("Avenir Next", Font.BOLD, 30));
+        scoreOfRound.setHorizontalAlignment(JTextField.CENTER);
 
         congratulations.setBounds(25, 55, 100, 60);
         congratulations.setForeground(new Color(25, 255, 0));
@@ -309,9 +309,9 @@ public class Quiz implements ActionListener {
         timeLeft.setVisible(false);
         timeLabel.setVisible(false);
 
-        scoreofRound.setText("Totala poäng: "+ correctGuesses);
+        scoreOfRound.setText("Totala poäng: "+ correctGuesses);
         panel.add(congratulations);
-        panel.add(scoreofRound);
+        panel.add(scoreOfRound);
 
     }
 }

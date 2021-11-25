@@ -1,4 +1,4 @@
-package Default;
+package clientside.quizkampen;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,6 +15,7 @@ public class ImageBackground extends JPanel {
         backgroundImage = ImageIO.read(new File(fileName));
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
