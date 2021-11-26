@@ -1,7 +1,5 @@
 package Default;
 
-
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -23,7 +21,7 @@ public class LoadQuestionsAndRounds {
             properties.load(fileInputStream);
 
         } catch (Exception e){
-
+            e.printStackTrace();
         }
         finally {
             if (fileInputStream != null){

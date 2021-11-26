@@ -1,7 +1,6 @@
 package serverside.quizkampen;
 
 import Default.LoadQuestionsAndRounds;
-import clientside.quizkampen.Quiz;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +18,6 @@ public class GameSettings extends JFrame implements ActionListener {
     public static String getTotalQuestionsString() {return totalQuestionsString;}
     public static String getTotalRoundsString() {return totalRoundsString;}
 
-   //LoadQuestionsAndRounds loadQuestionsAndRounds = new LoadQuestionsAndRounds();
     JComboBox comboBox;
     JComboBox comboBox2;
     JButton startGameButton;

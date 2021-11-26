@@ -27,7 +27,6 @@ public class Client implements ActionListener{
     //Index is which question we're currently on
     String correctAnswer;
     String answer;
-    //int index;
     int correctGuesses = 0;
     int roundCounter = 0;
 
@@ -376,7 +375,7 @@ public class Client implements ActionListener{
     public static void main(String[] args) throws IOException {
         String name = takeInputWindow("Please enter your name");
 
-        Socket socket = new Socket("localhost", 7777);
+        Socket socket = new Socket("172.20.201.9", 7777);
         Client client = new Client(socket, name);
         client.sendPacket(client.username);
         client.listenForPacket();
