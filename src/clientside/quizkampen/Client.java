@@ -163,7 +163,7 @@ public class Client implements ActionListener{
         timeLeft.setHorizontalAlignment(SwingConstants.CENTER);
         timeLeft.setText(String.valueOf(seconds));
 
-        scoreOfRound.setBounds(25, 225, 100, 80);
+        scoreOfRound.setBounds(25, 225, 300, 80);
         scoreOfRound.setForeground(new Color(0, 244, 0));
         scoreOfRound.setFont(new Font("Avenir Next", Font.BOLD, 30));
         scoreOfRound.setHorizontalAlignment(SwingConstants.CENTER);
@@ -200,6 +200,7 @@ public class Client implements ActionListener{
     public void sendAnswer(String correctAnswer){
         String packet = answer;
         if(packet.equals(correctAnswer)){
+            correctGuesses++;
             sendPacket("correct");
         }
         else{
@@ -240,6 +241,7 @@ public class Client implements ActionListener{
                     case 0 -> displayTextWindow(receivedPacket);
                     case 1 -> questionHandling(receivedPacket);
                     case 2 -> waitForOtherClient();
+                    case 3 -> showResults(receivedPacket);
                     default -> System.out.println("Problem with the header");
                 }
             } catch (IOException e){
@@ -327,7 +329,7 @@ public class Client implements ActionListener{
     }
 
 
-    public void results() {
+    public void showResults(String result) {
         timer.stop();
         for (JButton button : buttonList){
             button.setEnabled(false);
@@ -341,9 +343,11 @@ public class Client implements ActionListener{
         timeLeft.setVisible(false);
         timeLabel.setVisible(false);
 
-        scoreOfRound.setText("Totala poäng: "+ correctGuesses);
+        scoreOfRound.setText("Poäng: " + correctGuesses);
         panel.add(congratulations);
         panel.add(scoreOfRound);
+
+        displayTextWindow(result);
     }
 
 
@@ -365,15 +369,14 @@ public class Client implements ActionListener{
 
 
     public void waitForOtherClient() {
-        System.out.println("Awaiting other client to finish their question...");
+        questionField.setText("Awaiting other client...");
         listenForPacket();
     }
 
     public static void main(String[] args) throws IOException {
         String name = takeInputWindow("Please enter your name");
 
-        String serverAddress = (args.length == 0) ? "localhost" : args[1];
-        Socket socket = new Socket(serverAddress, 7777);
+        Socket socket = new Socket("localhost", 7777);
         Client client = new Client(socket, name);
         client.sendPacket(client.username);
         client.listenForPacket();

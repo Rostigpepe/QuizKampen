@@ -8,6 +8,8 @@ public class ServerActions {
     private static final Random random = new Random();
     private static final ArrayList<ArrayList<ClientHandler>> currentGames = new ArrayList<>();
 
+    private static final int INIT_QUESTION = random.nextInt(11 - 1) + 1;
+
     //Utility class
     private ServerActions(){}
 
@@ -20,19 +22,21 @@ public class ServerActions {
         //If there is currently a game with an empty spot, we'll add the client to that game
         else if(currentGames.get(currentGames.size() - 1).size() < 2){
             currentGames.get(currentGames.size() - 1).add(addNewClientHandler());
+            //Long boi, 3 AM, pain pain pain
+            //Sets both client handlers game category to be the same
+            currentGames.get(currentGames.size() - 1).get(1).setRoundCategory(currentGames.get(currentGames.size() - 1).get(0).getRoundCategory());
         }
         //If there are games, but no game with an empty spot, we'll create a new game
         else{
             currentGames.add(addNewArrayList());
         }
 
-        //Welcoming them to the game
-        sendGeneralPacket("Welcome to the game");
-
         //Gets the newest client handler and sends only them a question
         //We do not send a question to everyone in the game since we don't want the first potential player to get a duplicate question
         int clientHandlerSize = ClientHandler.getClientHandlers();
         ClientHandler tempClientHandler = ClientHandler.clientHandlers.get(clientHandlerSize - 1);
+
+        tempClientHandler.sendGeneralPacket("Welcome to the game");
         sendQuestion(tempClientHandler);
     }
 
@@ -60,23 +64,14 @@ public class ServerActions {
         return ClientHandler.clientHandlers.get(clientHandlerSize - 1);
     }
 
-
-    public static void sendGeneralPacket(String stringToSend){
-        for (ClientHandler clientHandler : ClientHandler.clientHandlers){
-            clientHandler.sendGeneralPacket(stringToSend);
-        }
-    }
-
     //Method to only send a question to one person
     public static void sendQuestion(ClientHandler clientHandler){
-        int tempRand = random.nextInt(11 - 1 + 1);
-
-        clientHandler.sendQuestion(tempRand);
+        clientHandler.sendQuestion(INIT_QUESTION, 4);
     }
 
     //Method to send a question to both people in a game
     public static void sendQuestionToGame(ClientHandler clientHandler){
-        int tempRand = random.nextInt(11 - 1 + 1);
+        int tempRand = random.nextInt(5 - 1) + 1;
 
         //We look for the game our specific client is assigned to
         for (ArrayList<ClientHandler> currentGame : currentGames){
@@ -84,10 +79,26 @@ public class ServerActions {
                 //If a game contains our client, we'll send the question to every client in that specific game
                 for (ClientHandler tempClientHandler : currentGame) {
                     tempClientHandler.setWaitingFalse();
-                    tempClientHandler.sendQuestion(tempRand);
+                    tempClientHandler.sendQuestion(tempRand, clientHandler.getRoundCategory());
                 }
             }
         }
+    }
+
+    public static int getRoundCategoryFromOpponent(ClientHandler clientHandler){
+        int opponentRoundCategory = 1;
+
+        for (ArrayList<ClientHandler> currentGame : currentGames){
+            if(currentGame.contains(clientHandler)){
+                if(currentGame.get(0).equals(clientHandler)){
+                    opponentRoundCategory = currentGame.get(1).getRoundCategory();
+                }
+                else{
+                    opponentRoundCategory = currentGame.get(0).getRoundCategory();
+                }
+            }
+        }
+        return opponentRoundCategory;
     }
 
     //Method to get the waiting boolean from your opponent in the game
@@ -121,5 +132,32 @@ public class ServerActions {
         }
         System.out.println("Something went very wrong");
         return "something went very wrong";
+    }
+
+
+    public static void showResults(ClientHandler clientHandler){
+        String nameOne;
+        String nameTwo;
+        int scoreOne;
+        int scoreTwo;
+
+        //We look for the game our specific client is assigned to
+        for (ArrayList<ClientHandler> currentGame : currentGames){
+            if (currentGame.contains(clientHandler)){
+                //PainPainPain
+                nameOne = currentGame.get(0).getUsername();
+                nameTwo = currentGame.get(1).getUsername();
+                scoreOne = currentGame.get(0).getScore();
+                scoreTwo = currentGame.get(1).getScore();
+
+                String scoreString = nameOne + " scored: " + scoreOne + " " + nameTwo + " scored: " + scoreTwo;
+
+                //If a game contains our client, we'll send the result stuff to every client in that specific game
+                for (ClientHandler tempClientHandler : currentGame) {
+                    tempClientHandler.sendResults(scoreString);
+                }
+            }
+        }
+
     }
 }

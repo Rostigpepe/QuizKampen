@@ -44,8 +44,19 @@ public class Questions {
 
 
     //Just gets the whole object as a string, so we can send it
-    public static String getQuestionString(int index){
-        Questions question = allQuestions.get(index);
+    //Category 1 == history
+    //Category 2 == geography
+    //Category 3 == culture
+    public static String getQuestionString(int index, int category){
+        Questions question;
+        int funnyIndex = index - 1;
+        switch (category){
+            case 1 -> question = historyQuestions.get(funnyIndex);
+            case 2 -> question = geographyQuestions.get(funnyIndex);
+            case 3 -> question = cultureQuestions.get(funnyIndex);
+            default -> question = allQuestions.get(funnyIndex);
+        }
+
         return buildQuestionString(question);
     }
 
