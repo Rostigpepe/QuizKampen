@@ -32,7 +32,7 @@ public class Server {
                 thread.start();
 
                 //Add it so that multiple games can play at once
-                //ServerActions.startGame();
+                ServerActions.startGame();
             }
         } catch (IOException e){
             e.printStackTrace();
