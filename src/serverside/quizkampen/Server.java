@@ -8,6 +8,9 @@ public class Server {
 
     private final ServerSocket serverSocket;
 
+    /**Constructor for the Server
+     * @param serverSocket Socket which all clients will connect to
+     */
     public Server(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
         Questions.readQuestionsFromFile("resources/Geografi");
@@ -15,6 +18,9 @@ public class Server {
         Questions.readQuestionsFromFile("resources/Kultur");
     }
 
+    /**Method used to start the server
+     * Put simply, waits to accept a socket, creates ClientHandlers and assigns them to new threads
+     */
     public void startServer() {
         try {
             while (!serverSocket.isClosed()){
@@ -37,12 +43,5 @@ public class Server {
         } catch (IOException e){
             e.printStackTrace();
         }
-    }
-
-
-    public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(7777);
-        Server server = new Server(serverSocket);
-        server.startServer();
     }
 }

@@ -68,8 +68,9 @@ public class GameSettings extends JFrame implements ActionListener {
             else {
                 this.setVisible(false);
                 try {
-                    //Change to server
-                    //Call client via itself lmao
+                    //Creates a new server and tells it to start
+                    //This should honestly not be here since it makes the code more annoying to read
+                    //But we had to leave it here due to time constraints, and well, it works
                     ServerSocket serverSocket = new ServerSocket(7777);
                     Server server = new Server(serverSocket);
                     server.startServer();
