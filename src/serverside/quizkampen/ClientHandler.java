@@ -20,7 +20,7 @@ public class ClientHandler implements Runnable{
     private int score = 0;
     private boolean waiting = false;
 
-    private int index;
+    private int currentGameQuestion;
     private final Random random = new Random();
     private int roundCategory;
     private static final int QUESTIONS_PER_ROUND = Integer.parseInt(GameSettings.getTotalQuestionsString());
@@ -105,7 +105,7 @@ public class ClientHandler implements Runnable{
     //What we are using to update the score of every client and to loop the program back around
     public void updateScore(String answer){
         this.waiting = true;
-        index++;
+        currentGameQuestion++;
         //Add logic to check if the currently asked question
         if(answer.equals("correct")){
             this.score += 1;
@@ -115,14 +115,22 @@ public class ClientHandler implements Runnable{
             sendGeneralPacket("You are incorrect, Score: " + score);
         }
 
-        if(index != 1 && index % QUESTIONS_PER_ROUND == 0){
+
+        if(QUESTIONS_PER_ROUND == 1){
             sendGeneralPacket("Round is over, Score: " + score);
             this.roundCategory = random.nextInt(4 - 1) + 1;
         }
+        else{
+            if(currentGameQuestion != 1 && currentGameQuestion % QUESTIONS_PER_ROUND == 0){
+                sendGeneralPacket("Round is over, Score: " + score);
+                this.roundCategory = random.nextInt(4 - 1) + 1;
+            }
+        }
+
 
         if(ServerActions.getWaitingFromOpponent(this).equals("waiting")){
             //Exiting the program and displaying the scores if the game is over
-            if (index == QUESTIONS_PER_ROUND * TOTAL_ROUNDS) {
+            if (currentGameQuestion == QUESTIONS_PER_ROUND * TOTAL_ROUNDS) {
                 ServerActions.showResults(this);
             }
             else{

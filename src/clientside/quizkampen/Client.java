@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class Client implements ActionListener{
     //List for me to minimize code because im lazy
-    private ArrayList<JButton> buttonList = new ArrayList<>();
+    private final ArrayList<JButton> buttonList = new ArrayList<>();
 
     //Variables for online interfacing
     private Socket socket;
@@ -33,8 +33,8 @@ public class Client implements ActionListener{
     //Seconds is for the timer
     //The rest is probably not going to be here
     int seconds = 20;
-    //private final int totalQuestions = Integer.parseInt(GameSettings.getTotalQuestionsString());
-    //private final int totalRounds = Integer.parseInt(GameSettings.getTotalRoundsString());
+    private final ArrayList<Integer> allRoundCorrectGuesses = new ArrayList<>();
+    private final ArrayList<JLabel> scoreOfEveryRound = new ArrayList<>();
 
     //A lot of variables for the GUI
     JFrame frame = new JFrame();
@@ -181,12 +181,28 @@ public class Client implements ActionListener{
         panel.add(buttonD);
         panel.add(timeLeft);
         panel.add(timeLabel);
+        allRoundCorrectGuesses.add(0);
     }
 
 
-    public static void displayTextWindow(String windowText){
-        JFrame ioWindowFrame = new JFrame();
-        JOptionPane.showMessageDialog(ioWindowFrame, windowText);
+    public void displayTextWindow(String windowText){
+        if(windowText.contains("Round is over")){
+            correctGuesses = 0;
+            roundCounter++;
+            allRoundCorrectGuesses.add(0);
+
+            JLabel newScoreOfRound = new JLabel();
+            newScoreOfRound.setBounds(25, 225, 300, 80);
+            newScoreOfRound.setForeground(new Color(0, 244, 0));
+            newScoreOfRound.setFont(new Font("Avenir Next", Font.BOLD, 30));
+            newScoreOfRound.setHorizontalAlignment(SwingConstants.CENTER);
+            scoreOfEveryRound.add(newScoreOfRound);
+        }
+
+        Thread windowThread = new Thread(() -> {
+            JFrame ioWindowFrame = new JFrame();
+            JOptionPane.showMessageDialog(ioWindowFrame, windowText);
+        }); windowThread.start();
     }
 
     public static String takeInputWindow(String windowText){
@@ -200,6 +216,7 @@ public class Client implements ActionListener{
         String packet = answer;
         if(packet.equals(correctAnswer)){
             correctGuesses++;
+            allRoundCorrectGuesses.set(roundCounter, correctGuesses);
             sendPacket("correct");
         }
         else{
@@ -270,7 +287,7 @@ public class Client implements ActionListener{
                 case 2 -> buttonB.setText(splitQuestion[i]);
                 case 3 -> buttonC.setText(splitQuestion[i]);
                 case 4 -> buttonD.setText(splitQuestion[i]);
-                case 5 -> genreField.setText("WIP, fix genre");
+                case 5 -> genreField.setText("Question");
                 default -> System.out.println("Pain i dont know whats happening");
             }
         }
@@ -328,7 +345,7 @@ public class Client implements ActionListener{
     }
 
 
-    public void showResults(String result) {
+    public void showResults(String result) throws IOException {
         timer.stop();
         for (JButton button : buttonList){
             button.setEnabled(false);
@@ -341,10 +358,22 @@ public class Client implements ActionListener{
         }
         timeLeft.setVisible(false);
         timeLabel.setVisible(false);
+        panel.setVisible(false);
 
-        scoreOfRound.setText("Poäng: " + correctGuesses);
-        panel.add(congratulations);
-        panel.add(scoreOfRound);
+        JPanel scorePanel = new ImageBackground("quizkampenbakgrund.jpg");
+        scorePanel.setSize(335, 600);
+        scorePanel.setVisible(true);
+        scorePanel.setOpaque(false);
+        scorePanel.setLayout(new GridLayout(scoreOfEveryRound.size(), 1));
+        frame.add(scorePanel);
+
+        int i = 0;
+        for (JLabel tempScoreOfRound : scoreOfEveryRound){
+            tempScoreOfRound.setText("Round " + (i + 1) + " Points: " + allRoundCorrectGuesses.get(i));
+            i++;
+            scorePanel.add(tempScoreOfRound);
+        }
+        scorePanel.revalidate();
 
         displayTextWindow(result);
     }
@@ -375,7 +404,8 @@ public class Client implements ActionListener{
     public static void main(String[] args) throws IOException {
         String name = takeInputWindow("Please enter your name");
 
-        Socket socket = new Socket("172.20.201.9", 7777);
+        //INSERT SERVER IP HERE, REPLACE LOCALHOST
+        Socket socket = new Socket("localhost", 7777);
         Client client = new Client(socket, name);
         client.sendPacket(client.username);
         client.listenForPacket();
