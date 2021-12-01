@@ -1,13 +1,12 @@
 package serverside.quizkampen;
 
 
-import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ClientHandler implements Runnable{
-
     //Arraylist to keep track of all current connected clients
     protected static final ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     //A socket represents the connection between a server and client
@@ -21,9 +20,11 @@ public class ClientHandler implements Runnable{
     private int score = 0;
     private boolean waiting = false;
 
-    private int index;
-    private int totalQuestions = 2;
-    private int totalRounds = 2;
+    private int currentGameQuestion;
+    private final Random random = new Random();
+    private int roundCategory;
+    private static final int QUESTIONS_PER_ROUND = Integer.parseInt(GameSettings.getTotalQuestionsString());
+    private static final int TOTAL_ROUNDS = Integer.parseInt(GameSettings.getTotalRoundsString());
 
     public ClientHandler(Socket socket){
         try {
@@ -32,6 +33,7 @@ public class ClientHandler implements Runnable{
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.clientUsername = bufferedReader.readLine();
+            roundCategory = random.nextInt(5 - 1) + 1;
 
             //Adding this instance of clientHandler to the arraylist we'll use for overall communication
             clientHandlers.add(this);
@@ -47,40 +49,16 @@ public class ClientHandler implements Runnable{
         String receivedInput;
 
         while(socket.isConnected()){
-
-
             try {
                 //This is a blocking operation, yet another reason we want to run everything in separate threads
                 receivedInput = bufferedReader.readLine();
-                boolean startGame = startGame(receivedInput);
-                if(startGame) {
-                    if(receivedInput.equals("correct")){
-                        sendGeneralPacket("You are correct");
-                    }
-                    else{
-                        sendGeneralPacket("You are incorrect");
-                    }
-
-                    updateScore(receivedInput);
-                }
+                updateScore(receivedInput);
             } catch (IOException e){
                 closeAll(socket, bufferedReader, bufferedWriter);
                 break;
             }
         }
     }
-
-    private boolean startGame(String receivedInput) {
-        // TODO Auto-generated method stub
-        boolean startGame = receivedInput.contentEquals("game applications");
-        if(startGame) {
-            ServerActions.startGame();
-            return startGame;
-        }
-
-        return false;
-    }
-
 
 
     //General method used to send a packet between the server and the client
@@ -105,8 +83,8 @@ public class ClientHandler implements Runnable{
 
     //Specific method to send packets with a question
     //Header of 1 equals question
-    public void sendQuestion(int index){
-        String packet = "1" + Questions.getQuestionString(index);
+    public void sendQuestion(int index, int category){
+        String packet = "1" + Questions.getQuestionString(index, category);
         sendPacket(packet);
     }
 
@@ -117,39 +95,56 @@ public class ClientHandler implements Runnable{
         sendPacket(packet);
     }
 
-    //What we use to update the score of every client and to loop the program back around
+    //Specific method to tell a client the game is done
+    //Header of 3 equals waiting
+    public void sendResults(String resultString){
+        String packet = "3" + resultString;
+        sendPacket(packet);
+    }
+
+    //What we are using to update the score of every client and to loop the program back around
     public void updateScore(String answer){
         this.waiting = true;
-        index++;
+        currentGameQuestion++;
         //Add logic to check if the currently asked question
         if(answer.equals("correct")){
             this.score += 1;
-            sendGeneralPacket("Your score has increased");
+            sendGeneralPacket("You are correct, Score: " + score);
         }
         else{
-            sendGeneralPacket("Your score has not been changed");
+            sendGeneralPacket("You are incorrect, Score: " + score);
         }
 
-        if (index == totalQuestions)
-        {
-            JOptionPane.showMessageDialog(null,"Ronden är slut. Din score är: " + score);
+
+        if(QUESTIONS_PER_ROUND == 1){
+            sendGeneralPacket("Round is over, Score: " + score);
+            this.roundCategory = random.nextInt(4 - 1) + 1;
         }
-        if (index == totalQuestions * totalRounds) {
-            return;
-            //results();
+        else{
+            if(currentGameQuestion != 1 && currentGameQuestion % QUESTIONS_PER_ROUND == 0){
+                sendGeneralPacket("Round is over, Score: " + score);
+                this.roundCategory = random.nextInt(4 - 1) + 1;
+            }
         }
 
 
         if(ServerActions.getWaitingFromOpponent(this).equals("waiting")){
-            //If the other person IS waiting, that means both of us are now done, therefore the game should continue
-            ServerActions.sendQuestionToGame(this);
+            //Exiting the program and displaying the scores if the game is over
+            if (currentGameQuestion == QUESTIONS_PER_ROUND * TOTAL_ROUNDS) {
+                ServerActions.showResults(this);
+            }
+            else{
+                //If the other person IS waiting, that means both of us are now done, therefore the game should continue
+                this.setRoundCategory(ServerActions.getRoundCategoryFromOpponent(this));
+                ServerActions.sendQuestionToGame(this);
+            }
         }
         else if(ServerActions.getWaitingFromOpponent(this).equals("not waiting")){
             //if the other person is NOT waiting, that means that they're still doing their round, therefore we will wait
             sendWaitRequest();
         }
         else{
-            //We need to add something incase there isn't another person in the game yet, in which case we will wait
+            //We need to add something in case there isn't another person in the game yet, in which case we will wait
             sendWaitRequest();
         }
     }
@@ -165,14 +160,14 @@ public class ClientHandler implements Runnable{
         this.waiting = false;
     }
 
+    public void setRoundCategory(int roundCategory) { this.roundCategory = roundCategory; }
+
 
     public static int getClientHandlers(){
         return clientHandlers.size();
     }
 
-    public String getUsername(){
-        return this.clientUsername;
-    }
+    public String getUsername(){ return this.clientUsername;}
 
     public boolean getWaiting(){
         return this.waiting;
@@ -181,6 +176,8 @@ public class ClientHandler implements Runnable{
     public int getScore(){
         return this.score;
     }
+
+    public int getRoundCategory() { return this.roundCategory; }
 
     //We only need to close the outer wrappers of the streams, the inner parts are auto closed
     public void closeAll(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter){
